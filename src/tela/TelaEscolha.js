@@ -74,7 +74,7 @@ export default class TelaLogin extends Component {
                                             height={50}
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("TelaCodigo", {
+                                            onClick={() => this.props.navigation.navigate("RelatorioBalanco", {
                                             })}
                                         />     
                                     </View>
@@ -85,7 +85,7 @@ export default class TelaLogin extends Component {
                                             height={50}
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("TelaCodigo", {
+                                            onClick={() => this.props.navigation.navigate("RelatorioBalanco", {
                                             })}
                                         />     
                                     </View>
@@ -96,7 +96,7 @@ export default class TelaLogin extends Component {
                                             height={50}
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("TelaCodigo", {
+                                            onClick={() => this.props.navigation.navigate("RelatorioBalanco", {
                                             })}
                                         />     
                                     </View>  
