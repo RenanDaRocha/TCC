@@ -10,11 +10,7 @@ export default StyleSheet.create({
         paddingTop: 20,
     },
     informacoes: {
-        padding: 10,
         paddingBottom: 20,
-        borderWidth: 10,
-        borderColor: Constantes.corBloco,
-        backgroundColor: '#DDD',
         borderRadius: 10,
         width: '90%',
     },
@@ -27,5 +23,9 @@ export default StyleSheet.create({
     botoes: {
         flexDirection: 'row',
         width: '90%',
+    },
+    botao: {
+        flexDirection: 'row',
+        width: '50%',
     }
 })

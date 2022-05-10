@@ -31,6 +31,11 @@ export default class TelaLogin extends Component {
                             <Text style={styles.data}>                    
                                 {DataHoje(4)} 
                             </Text>
+                            <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                            <Text style={styles.data}>                    
+                                {constantes.usuario} 
+                            </Text>
+                            
                             <Text style={styles.ultimoAcerto}>
                                 {'\n'}
                                 Último Acerto: "Data" 
@@ -74,7 +79,8 @@ export default class TelaLogin extends Component {
                                             height={50}
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("TelaCodigo", {
+                                            onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                                dificuldade: 1
                                             })}
                                         />     
                                     </View>
@@ -85,7 +91,8 @@ export default class TelaLogin extends Component {
                                             height={50}
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("TelaCodigo", {
+                                            onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                                dificuldade: 2
                                             })}
                                         />     
                                     </View>
@@ -96,12 +103,12 @@ export default class TelaLogin extends Component {
                                             height={50}
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("TelaCodigo", {
+                                            onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                                dificuldade: 3
                                             })}
                                         />     
                                     </View>  
                                 </View>
-                                
                             </View>                               
                         </View>
 

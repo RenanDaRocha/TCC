@@ -1,112 +1,98 @@
-import { StatusBar } from 'expo-status-bar'
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ImageBackground, ScrollView, Image } from 'react-native'
+import { View, ImageBackground, ScrollView } from 'react-native'
 
-import styles from './estilo/EstiloTelaPrincipal'
+import styles from './estilo/EstiloTelaEscolha'
 import BotaoCentral from '../componente/BotaoCentral'
-import { DataHoje } from '../funcoes'
-import constantes from '../constantes'
+import api from '../servico/api'
 
 const imgFundo='../../assets/background.png'
 
 export default class TelaLogin extends Component {
 
+    constructor(props){
+        super(props);
+
+        this.state = {
+            dados: null
+        }
+    }
+
+    componentDidMount(){
+        this.buscaDados();
+    }
+
+    async buscaDados() {
+        try {
+            const response = await api.get("/codigos/"+this.props.route.params.dificuldade);
+            if (response.data.length) {         
+                this.setState({dados: response.data}) 
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    valores(dados, key){
+        return(
+            <View key={key}>
+                <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                <BotaoCentral
+                    style={styles.botao}
+                    titulo={dados.TITULO}
+                    height= {50}
+                    width= {'100%'}
+                    backgroundColor = 'white'
+                    corFonte = 'black'
+                    borderWidth = {1}
+                    borderColor = 'black'
+                    alignItems = 'baseline'
+                    TamFonte = {18}
+                    onClick={() => this.props.navigation.navigate("TelaCodigo", {
+                        id: dados.ID,
+                        descricao: dados.DESCRICAO,
+                        trecho1: dados.TRECHO,
+                        trecho2: dados.TRECHO2
+                    })}
+                />
+            </View>
+        )
+    }
+
+    BotoesCodigo(){
+        if (this.state.dados) {
+            return(
+                this.state.dados.map((x,i) => {      
+                    return(this.valores(x, i))    
+                })    
+            )
+                     
+        }     
+    }
+
     render(){
+        
         return <>
             <ImageBackground
                 source={require(imgFundo)}
                 style={{width: '100%', height: '100%'}}
             >
                 <ScrollView>
-                <View style={styles.telaTotal}>
-                        <View style={styles.informacoes}>
-                            <Text style={styles.hoje}>
-                                {DataHoje(8)}
-                            </Text>
-                            <Image
-                                style={styles.stretch}
-                                resizeMode='contain'
-                                source={require('../../assets/calendario.png')}
-                            />
-                            <Text style={styles.data}>                    
-                                {DataHoje(4)} 
-                            </Text>
-                            <Text style={styles.ultimoAcerto}>
-                                {'\n'}
-                                Último Acerto: "Data" 
-                            </Text>
-                            <Text style={styles.codigosResolvidos}>
-                                Códigos resolvidos Totais: 0
-                            </Text>                               
-                        </View>
-
-                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
-
-                        <View style={styles.informacoes}>
-                            <View style={{alignItems:'center', paddingBottom: 30}}>
-                                <Text style={styles.data}>
-                                    Dificuldade
-                                </Text>    
-                            </View>                    
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={{flex: 3}}>
-                                    <View style={styles.resolvidos}>
-                                        <Text style={styles.codigosResolvidos}>
-                                            0 de 0
-                                        </Text>
-                                    </View>
-                                    <View style={styles.resolvidos}>
-                                        <Text style={styles.codigosResolvidos}>
-                                            0 de 0
-                                        </Text>
-                                    </View>
-                                    <View style={styles.resolvidos}>
-                                        <Text style={styles.codigosResolvidos}>
-                                            0 de 0
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={{flex: 2}}>
-                                    <View style={{padding: 10}}>
-                                        <BotaoCentral 
-                                            titulo="Fácil"
-                                            backgroundColor='white'
-                                            height={50}
-                                            corFonte={constantes.corBloco}
-                                            TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("RelatorioBalanco", {
-                                            })}
-                                        />     
-                                    </View>
-                                    <View style={{padding: 10}}>
-                                        <BotaoCentral 
-                                            titulo="Médio"
-                                            backgroundColor='white'
-                                            height={50}
-                                            corFonte={constantes.corBloco}
-                                            TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("RelatorioBalanco", {
-                                            })}
-                                        />     
-                                    </View>
-                                    <View style={{padding: 10}}>
-                                        <BotaoCentral 
-                                            titulo="Difícil"
-                                            backgroundColor='white'
-                                            height={50}
-                                            corFonte={constantes.corBloco}
-                                            TamFonte={24}
-                                            onClick={() => this.props.navigation.navigate("RelatorioBalanco", {
-                                            })}
-                                        />     
-                                    </View>  
-                                </View>
-                                
-                            </View>                               
-                        </View>
-
-                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                    <View style={styles.telaTotal}>
                         
+                        <View style={styles.informacoes}>
+                            {this.BotoesCodigo()}    
+                        </View>  
+
+                        <View style={{borderBottomWidth: 0, paddingTop: 30}} />
+
+                        <View style={styles.botoes}>                         
+                           <BotaoCentral
+                                titulo="Cancelar"
+                                height= {50}   
+                                width= {'100%'}
+                                onClick={() => this.props.navigation.goBack()}                   
+                            />     
+                        </View>  
 
                         <View style={{paddingTop: 30}}/> 
                     </View>

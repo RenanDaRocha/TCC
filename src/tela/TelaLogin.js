@@ -4,6 +4,8 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 
 import styles from './estilo/EstiloTelaLogin'
 import BotaoCentral from '../componente/BotaoCentral'
+import constantes from '../constantes'
+import api from '../servico/api'
 
 const imgFundo='../../assets/background.png'
 
@@ -23,6 +25,46 @@ export default class TelaLogin extends Component {
         }
     }
 
+    componentDidMount(){
+        this.buscaDados();
+    }
+
+    async buscaDados() {
+        try {
+            const response = await api.get("/login");
+            if (response.data.length) {         
+                this.setState({dados: response.data}) 
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    ExecutarLogin = () => {
+        this.buscaDados()
+        
+        if (this.state.dados) {            
+            try {
+                let retorno = false
+                    for (let i = 0; i < this.state.dados.length; i++) {
+                        if (((this.state.valueLogin.toUpperCase() == this.state.dados[i].LOGIN) && 
+                             (this.state.valueSenha.toUpperCase() == this.state.dados[i].SENHA)))
+                        {
+                            retorno = true 
+                            constantes.usuario = this.state.dados[i].NOME
+                        }
+                    }
+                    this.setState({SenhaInvalida: !retorno})
+                    if (retorno) {
+                        this.props.navigation.navigate("TelaPrincipal")    
+                    }
+            } catch (error) {
+                console.log(error)
+            }
+        }    
+        this.setState({SenhaInvalida: true})  
+    }
+
     render(){
 
         const changePwdType = () => {
@@ -30,17 +72,7 @@ export default class TelaLogin extends Component {
             this.setState({Esenha: !this.state.Esenha}) 
         };  
 
-        const ExecutarLogin = () => {
-            
-            this.props.navigation.navigate("TelaPrincipal")
-            /*if (this.state.dados) {
-                try {
-                    this.props.navigation.navigate("TelaPrincipal")
-                } catch (error) {
-                    console.log(error)
-                }
-            }    */   
-        }
+        
 
         return <>
             <ImageBackground
@@ -99,7 +131,7 @@ export default class TelaLogin extends Component {
                                         height={70}
                                         width='100%'
                                         borderWidth={1}
-                                        onClick={() => ExecutarLogin()}
+                                        onClick={() => this.ExecutarLogin()}
                                     />    
                                 </View>                                 
                             </View>    
