@@ -45,4 +45,8 @@ export default StyleSheet.create({
         color: 'red',
         fontSize: 16,
     },
+    cadastrar: {
+        paddingTop: 20,
+        alignItems: 'flex-end'
+    },
 })

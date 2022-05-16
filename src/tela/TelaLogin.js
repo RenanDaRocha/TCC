@@ -65,14 +65,19 @@ export default class TelaLogin extends Component {
         this.setState({SenhaInvalida: true})  
     }
 
+    
+    ExecutarCadastro = () => {
+        this.props.navigation.navigate("TelaCadastrar", {})
+        
+        this.buscaDados();
+    }
+
     render(){
 
         const changePwdType = () => {
             this.setState({eyeIcon: this.state.eyeIcon === "visibility" ? "visibility-off": "visibility"}) 
             this.setState({Esenha: !this.state.Esenha}) 
         };  
-
-        
 
         return <>
             <ImageBackground
@@ -88,6 +93,7 @@ export default class TelaLogin extends Component {
                                     <TextInput 
                                         style={styles.login}
                                         placeholder="Login"
+                                        color='white'
                                         onChangeText={text => this.setState({valueLogin: text})}
                                         value={this.state.valueLogin}
                                         placeholderTextColor='white'
@@ -133,7 +139,18 @@ export default class TelaLogin extends Component {
                                         borderWidth={1}
                                         onClick={() => this.ExecutarLogin()}
                                     />    
-                                </View>                                 
+                                </View> 
+                                <View style={styles.cadastrar}>  
+                                    <BotaoCentral 
+                                        titulo='Cadastrar'
+                                        TamFonte={24}
+                                        alignItems='flex-end'
+                                        width='auto'
+                                        backgroundColor='none'
+                                        height='auto'
+                                        onClick={() => this.ExecutarCadastro()}
+                                    />    
+                                </View>                                  
                             </View>    
                         </ScrollView>       
                     </View>            
