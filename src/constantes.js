@@ -1,5 +1,6 @@
 export default  constantes = {
     usuario: '',
+    id: '',
 
     corDeFundo: '',
     corCabecalho: '#6EC1E4',

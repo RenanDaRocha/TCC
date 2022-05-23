@@ -1,3 +1,8 @@
+function ZeroEsquerda(value, totalWidth, paddingChar) {
+    var length = totalWidth - value.toString().length + 1;
+    return Array(length).join(paddingChar || '0') + value;
+  };
+  
 const DataHoje = (modo, diasDif=0, data=null) => {
 
     let currentDate = ''

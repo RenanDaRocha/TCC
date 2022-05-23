@@ -52,6 +52,7 @@ export default class TelaLogin extends Component {
                         {
                             retorno = true 
                             constantes.usuario = this.state.dados[i].NOME
+                            constantes.id = this.state.dados[i].ID
                         }
                     }
                     this.setState({SenhaInvalida: !retorno})

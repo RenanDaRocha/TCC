@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, ScrollView, TextInput } from 'react-native'
+import { View, Text, ImageBackground, ScrollView, TextInput, Alert } from 'react-native'
 
 import styles from './estilo/EstiloTelaCodigo'
 import BotaoCentral from '../componente/BotaoCentral'
+import api from '../servico/api'
+import constantes from '../constantes'
+import { DataHoje } from '../funcoes'
 
 const imgFundo='../../assets/background.png'
 
@@ -10,14 +13,41 @@ export default class TelaLogin extends Component {
 
     constructor(props){
         super(props);
-        this.id = this.props.route.params.ID
+        this.id = this.props.route.params.id
         this.descricao = this.props.route.params.descricao
         this.trecho1 = this.props.route.params.trecho1
         this.trecho2 = this.props.route.params.trecho2
+        this.resposta = this.props.route.params.resposta
+        this.retorno = ''
+
+        this.state = {
+            resposta: '',
+        }
+    }
+
+    async buscaDados() {
+        try {
+            const response = await api.get("/executar/"+this.state.resposta+'/'+this.resposta);
+            if (response.data == 'C') {
+                Alert.alert('Código Correto!')
+                console.log(constantes.id)
+                console.log(this.id)
+                await api.post("/enviarconcluido", {
+                    ID_USUARIO: constantes.id,
+                    ID_CODIGO: this.id,
+                    DATA: DataHoje(2)
+                });
+                this.props.navigation.navigate("TelaPrincipal")
+            } else {
+                Alert.alert('Código Incorreto!')
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     Enviar(){
-
+        this.buscaDados()   
     }
 
     render(){
@@ -44,6 +74,8 @@ export default class TelaLogin extends Component {
                             <View style={styles.codigo}>
                                 <TextInput
                                     multiline={true}
+                                    onChangeText={text => this.setState({resposta: text})}
+                                    value={this.state.resposta}
                                 />    
                             </View>   
                             <Text>

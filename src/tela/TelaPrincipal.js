@@ -6,10 +6,53 @@ import styles from './estilo/EstiloTelaPrincipal'
 import BotaoCentral from '../componente/BotaoCentral'
 import { DataHoje } from '../funcoes'
 import constantes from '../constantes'
+import api from '../servico/api'
 
 const imgFundo='../../assets/background.png'
 
 export default class TelaLogin extends Component {
+
+    constructor(props){
+        super(props);
+
+        this.state = {
+            total: '',
+            totalCon: '',
+            total1: '',
+            total1Con: '',
+            total2: '',
+            total2Con: '',
+            total3: '',
+            total3Con: '',
+            data: '',
+        }
+    }
+    
+    componentDidMount(){
+        this.buscaDados();
+    }
+
+    async buscaDados() {
+        try {
+            const response = await api.get("/concluido/"+constantes.id);
+            console.log(response.data)
+            if (response.data) {         
+                this.setState({
+                    total: response.data[0].CADTOTAL,
+                    totalCon: response.data[0].CADTOTALRESOL,
+                    total1: response.data[0].CADTOTAL1,
+                    total1Con: response.data[0].CADTOTAL1RESOL,
+                    total2: response.data[0].CADTOTAL2,
+                    total2Con: response.data[0].CADTOTAL2RESOL,
+                    total3: response.data[0].CADTOTAL3,
+                    total3Con: response.data[0].CADTOTAL3RESOL,
+                    data: response.data[0].ULTIMO,
+                }) 
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     render(){
         return <>
@@ -38,10 +81,10 @@ export default class TelaLogin extends Component {
                             
                             <Text style={styles.ultimoAcerto}>
                                 {'\n'}
-                                Último Acerto: "Data" 
+                                Último Acerto: {this.state.data ? DataHoje(1,0,this.state.data) : 'Nenhum realizado'} 
                             </Text>
                             <Text style={styles.codigosResolvidos}>
-                                Códigos resolvidos Totais: 0
+                                Códigos resolvidos Totais: {this.state.totalCon}
                             </Text>                               
                         </View>
 
@@ -57,17 +100,17 @@ export default class TelaLogin extends Component {
                                 <View style={{flex: 3}}>
                                     <View style={styles.resolvidos}>
                                         <Text style={styles.codigosResolvidos}>
-                                            0 de 0
+                                            {this.state.total1Con} de {this.state.total1}
                                         </Text>
                                     </View>
                                     <View style={styles.resolvidos}>
                                         <Text style={styles.codigosResolvidos}>
-                                            0 de 0
+                                            {this.state.total2Con} de {this.state.total2}
                                         </Text>
                                     </View>
                                     <View style={styles.resolvidos}>
                                         <Text style={styles.codigosResolvidos}>
-                                            0 de 0
+                                            {this.state.total3Con} de {this.state.total3}
                                         </Text>
                                     </View>
                                 </View>

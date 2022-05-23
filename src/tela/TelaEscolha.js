@@ -51,7 +51,8 @@ export default class TelaLogin extends Component {
                         id: dados.ID,
                         descricao: dados.DESCRICAO,
                         trecho1: dados.TRECHO,
-                        trecho2: dados.TRECHO2
+                        trecho2: dados.TRECHO2,
+                        resposta: dados.RESPOSTA
                     })}
                 />
             </View>
@@ -61,7 +62,7 @@ export default class TelaLogin extends Component {
     BotoesCodigo(){
         if (this.state.dados) {
             return(
-                this.state.dados.map((x,i) => {      
+                this.state.dados.map((x,i) => {
                     return(this.valores(x, i))    
                 })    
             )
