@@ -47,8 +47,8 @@ export default class TelaLogin extends Component {
             try {
                 let retorno = false
                     for (let i = 0; i < this.state.dados.length; i++) {
-                        if (((this.state.valueLogin.toUpperCase() == this.state.dados[i].LOGIN) && 
-                             (this.state.valueSenha.toUpperCase() == this.state.dados[i].SENHA)))
+                        if (((this.state.valueLogin == this.state.dados[i].LOGIN) && 
+                             (this.state.valueSenha == this.state.dados[i].SENHA)))
                         {
                             retorno = true 
                             constantes.usuario = this.state.dados[i].NOME

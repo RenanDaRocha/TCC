@@ -25,13 +25,20 @@ export default class TelaLogin extends Component {
         }
     }
 
+    
+
     async buscaDados() {
+
         try {
-            const response = await api.get("/executar/"+this.state.resposta+'/'+this.resposta);
+            const response = await api.post("/executar", {
+                CODIGO: this.trecho1+'\n'+this.state.resposta+'\n'+this.trecho2,
+                RESPOSTA: this.resposta
+            });
+
+            console.log(response.data)
+             
             if (response.data == 'C') {
                 Alert.alert('Código Correto!')
-                console.log(constantes.id)
-                console.log(this.id)
                 await api.post("/enviarconcluido", {
                     ID_USUARIO: constantes.id,
                     ID_CODIGO: this.id,
