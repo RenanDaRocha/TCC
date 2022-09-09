@@ -4,6 +4,7 @@ import { View, ImageBackground, ScrollView } from 'react-native'
 import styles from './estilo/EstiloTelaEscolha'
 import BotaoCentral from '../componente/BotaoCentral'
 import api from '../servico/api'
+import constantes from '../constantes'
 
 const imgFundo='../../assets/background.png'
 
@@ -23,13 +24,31 @@ export default class TelaLogin extends Component {
 
     async buscaDados() {
         try {
-            const response = await api.get("/codigos/"+this.props.route.params.dificuldade);
+            var response = null
+            if (this.props.route.params.modo == 1) {
+                response = await api.get("/codigos/"+this.props.route.params.dificuldade);
+            } else {
+                response = await api.get("/codigosusuario/"+constantes.id);
+            }
+            
             if (response.data.length) {         
                 this.setState({dados: response.data}) 
             }
         } catch (error) {
             console.log(error)
         }
+    }
+
+    navegarPara = (dados) => {
+        if (this.props.route.params.modo == 1) {
+            this.props.navigation.navigate("TelaCodigo", {
+                id: dados.ID,
+                descricao: dados.DESCRICAO,
+                trecho1: dados.TRECHO,
+                trecho2: dados.TRECHO2,
+                resposta: dados.RESPOSTA
+            }) 
+        }   
     }
 
     valores(dados, key){
@@ -47,13 +66,7 @@ export default class TelaLogin extends Component {
                     borderColor = 'black'
                     alignItems = 'baseline'
                     TamFonte = {18}
-                    onClick={() => this.props.navigation.navigate("TelaCodigo", {
-                        id: dados.ID,
-                        descricao: dados.DESCRICAO,
-                        trecho1: dados.TRECHO,
-                        trecho2: dados.TRECHO2,
-                        resposta: dados.RESPOSTA
-                    })}
+                    onClick={() => this.navegarPara(dados)}
                 />
             </View>
         )

@@ -49,7 +49,8 @@ export default class TelaLogin extends Component {
             const response = await api.post("/enviarlogin", {
                 LOGIN: this.state.valueLogin,
                 SENHA: this.state.valueSenha,
-                NOME: this.state.valueNome
+                NOME: this.state.valueNome,
+                TIPO: this.props.route.params.TIPO
             });
             if (response.status == 200) {
                 Alert.alert('Cadastro Concluído')

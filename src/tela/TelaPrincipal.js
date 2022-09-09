@@ -123,6 +123,7 @@ export default class TelaLogin extends Component {
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
                                             onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                                modo: 1,
                                                 dificuldade: 1
                                             })}
                                         />     
@@ -135,6 +136,7 @@ export default class TelaLogin extends Component {
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
                                             onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                                modo: 1,
                                                 dificuldade: 2
                                             })}
                                         />     
@@ -147,6 +149,7 @@ export default class TelaLogin extends Component {
                                             corFonte={constantes.corBloco}
                                             TamFonte={24}
                                             onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                                modo: 1,
                                                 dificuldade: 3
                                             })}
                                         />     
@@ -154,6 +157,68 @@ export default class TelaLogin extends Component {
                                 </View>
                             </View>                               
                         </View>
+
+                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                        {(constantes.tipo == 2 )? (
+                            <View style={styles.informacoes}>
+                                <View style={{alignItems:'center', paddingBottom: 30}}>
+                                    <Text style={styles.data}>
+                                        Relatório
+                                    </Text>    
+                                </View> 
+
+                                <View style={{flexDirection: 'column', flex: 1, paddingLeft: '8%'}}>
+                                    <BotaoCentral 
+                                        titulo="Resolvidos"
+                                        backgroundColor='white'
+                                        height={60}
+                                        corFonte={constantes.corBloco}
+                                        TamFonte={24}
+                                        onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                            modo: 2
+                                        })}
+                                    />   
+                                </View>                               
+                            </View>
+                        ) : null}
+
+                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                        {(constantes.tipo == 2 )? (
+                            <View style={styles.informacoes}>
+                                <View style={{alignItems:'center', paddingBottom: 30}}>
+                                    <Text style={styles.data}>
+                                        Cadastrar
+                                    </Text>    
+                                </View> 
+
+                                <View style={{flexDirection: 'column', flex: 1, paddingLeft: '8%'}}>
+                                    <BotaoCentral 
+                                        titulo="Supervisor"
+                                        backgroundColor='white'
+                                        height={60}
+                                        corFonte={constantes.corBloco}
+                                        TamFonte={24}
+                                        onClick={() => this.props.navigation.navigate("TelaCadastrar", {
+                                            TIPO: 2
+                                        })}
+                                    />     
+
+                                    <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                                    <BotaoCentral 
+                                        titulo="Código"
+                                        backgroundColor='white'
+                                        height={60}
+                                        corFonte={constantes.corBloco}
+                                        TamFonte={24}
+                                        onClick={() => this.props.navigation.navigate("TelaCadCodigo")}
+                                    />     
+                                </View>                               
+                            </View>
+                        ) : null}
+
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />
                         

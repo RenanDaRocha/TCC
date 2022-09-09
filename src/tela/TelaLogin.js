@@ -53,6 +53,7 @@ export default class TelaLogin extends Component {
                             retorno = true 
                             constantes.usuario = this.state.dados[i].NOME
                             constantes.id = this.state.dados[i].ID
+                            constantes.tipo = this.state.dados[i].TIPO
                         }
                     }
                     this.setState({SenhaInvalida: !retorno})
@@ -68,7 +69,9 @@ export default class TelaLogin extends Component {
 
     
     ExecutarCadastro = () => {
-        this.props.navigation.navigate("TelaCadastrar", {})
+        this.props.navigation.navigate("TelaCadastrar", {
+            TIPO: 1
+        })
         
         this.buscaDados();
     }
