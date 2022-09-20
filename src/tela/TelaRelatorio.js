@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, ImageBackground, ScrollView, ActivityIndicator } from 'react-native'
+import { View, ImageBackground, ScrollView, ActivityIndicator, Text } from 'react-native'
 
 import styles from './estilo/EstiloTelaEscolha'
 import BotaoCentral from '../componente/BotaoCentral'
 import api from '../servico/api'
 import constantes from '../constantes'
+import { DataHoje } from '../funcoes'
 
 const imgFundo='../../assets/background.png'
 
@@ -26,12 +27,7 @@ export default class TelaLogin extends Component {
     async buscaDados() {
         this.setState({Carregando: true})
         try {
-            var response = null
-            if (this.props.route.params.modo == 1) {
-                response = await api.get("/codigos/"+this.props.route.params.dificuldade);
-            } else {
-                response = await api.get("/codigosusuario/"+constantes.id);
-            }
+            const response = await api.get("/concluidoaluno/"+this.props.route.params.id+"/"+constantes.id);
             
             if (response.data.length) {         
                 this.setState({dados: response.data}) 
@@ -42,39 +38,21 @@ export default class TelaLogin extends Component {
         this.setState({Carregando: false})
     }
 
-    navegarPara = (dados) => {
-        if (this.props.route.params.modo == 1) {
-            this.props.navigation.navigate("TelaCodigo", {
-                id: dados.ID,
-                descricao: dados.DESCRICAO,
-                trecho1: dados.TRECHO,
-                trecho2: dados.TRECHO2,
-                resposta: dados.RESPOSTA
-            }) 
-        } else {
-            this.props.navigation.navigate("TelaRelatorio", {
-                id: dados.ID,
-            })  
-        }  
-    }
-
     valores(dados, key){
         return(
             <View key={key}>
-                <View style={{borderBottomWidth: 0, paddingTop: 20}} />
-                <BotaoCentral
-                    style={styles.botao}
-                    titulo={dados.TITULO}
-                    height= {50}
-                    width= {'100%'}
-                    backgroundColor = 'white'
-                    corFonte = 'black'
-                    borderWidth = {1}
-                    borderColor = 'black'
-                    alignItems = 'baseline'
-                    TamFonte = {18}
-                    onClick={() => this.navegarPara(dados)}
-                />
+                <View style={styles.dados}>
+                    <View style={{flex: 2, paddingLeft: 15}}>
+                        <Text>
+                            {dados.NOME}
+                        </Text>    
+                    </View>
+                    <View style={{flex: 1, paddingRight: 15, alignItems: 'flex-end'}}>
+                        <Text>
+                            {DataHoje(1,0,dados.DATA)}
+                        </Text>    
+                    </View>
+                </View>   
             </View>
         )
     }
@@ -108,7 +86,21 @@ export default class TelaLogin extends Component {
                             ) : null}   
                         </View>
                         
-                        <View style={styles.informacoes}>
+                        <View style={(styles.relatorio)}>                      
+                            <View style={{borderBottomWidth: 0, paddingTop: 10}} />
+                            <View style={styles.dados}>
+                                <View style={{flex: 2, paddingLeft: 15}}>
+                                    <Text style={styles.texto}>
+                                        Aluno:
+                                    </Text>    
+                                </View>
+                                <View style={{flex: 1, paddingRight: 15, alignItems: 'flex-end'}}>
+                                    <Text style={styles.texto}>
+                                        Concluido:
+                                    </Text>    
+                                </View>
+                            </View> 
+                            <View style={{borderBottomWidth: 0, paddingTop: 30}} />
                             {this.BotoesCodigo()}    
                         </View>  
 

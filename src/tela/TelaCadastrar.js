@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Text, TextInput, ImageBackground, Alert } from 'react-native'
+import { ScrollView, View, Text, TextInput, ImageBackground, Alert, ActivityIndicator } from 'react-native'
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import styles from './estilo/EstiloTelaLogin'
@@ -20,37 +20,45 @@ export default class TelaLogin extends Component {
             valueLogin: '',
             valueSenha: '',
             valueSenha2: '',
+            valueDisciplina: '',
             peopleIcon: "people",
             eyeIcon: "visibility",
             Esenha: true,
             usuarioCadastrado: false,
             SenhaInvalida: false,
-            Preenchido: false,
+            Preenchido: true,
+            Carregando: false,
         }
     }
 
-    componentDidMount(){
-        this.buscaDados();
-    }
-
     async buscaDados() {
+        this.setState({Carregando: true})
+        let retorno = false
         try {
-            const response = await api.get("/login");
+            const response = await api.post("/login", {
+                LOGIN: this.state.valueLogin,
+            });            
             if (response.data.length) {         
-                this.setState({dados: response.data}) 
+                this.setState({usuarioCadastrado: true})
+                retorno = true
+            } else {
+                this.setState({usuarioCadastrado: false})
             }
         } catch (error) {
             console.log(error)
         }
+        this.setState({Carregando: false})
+        return (retorno)
     }
 
     async EnviaDados() {
         try {
-            const response = await api.post("/enviarlogin", {
+            const response = await api.post("/enviarusuario", {
                 LOGIN: this.state.valueLogin,
                 SENHA: this.state.valueSenha,
                 NOME: this.state.valueNome,
-                TIPO: this.props.route.params.TIPO
+                DISCIPLINA: this.state.valueDisciplina,
+                NIVEL: this.props.route.params.NIVEL
             });
             if (response.status == 200) {
                 Alert.alert('Cadastro Concluído')
@@ -62,47 +70,37 @@ export default class TelaLogin extends Component {
         }
     }
 
-    Campos() {
-        this.setState({Preenchido: false})
-
-        if ((this.state.valueNome == '') ||
-           (this.state.valueLogin == '') ||
-           (this.state.valueSenha == '') ||
-           (this.state.valueSenha2 == '')) 
-        {
-            this.setState({Preenchido: true})
-        }
-    }
-
-
     ExecutarCadastro = () => {
-        this.buscaDados()
-        this.Campos()
-        
-        if (this.state.dados && !((this.state.valueNome == '') ||
-                                 (this.state.valueLogin == '') ||
-                                 (this.state.valueSenha == '') ||
-                                 (this.state.valueSenha2 == ''))) 
-        {            
-            try {
-                this.setState({usuarioCadastrado: false})
-                
-                for (let i = 0; i < this.state.dados.length; i++) {
-                    if (this.state.valueLogin.toUpperCase() == this.state.dados[i].LOGIN)
-                    {
-                        this.setState({usuarioCadastrado: true})
-                    }
-                }
-                this.setState({SenhaInvalida: this.state.valueSenha != this.state.valueSenha2})
+        let Preenchido = false
+        if (!this.state.Carregando){
 
-                if ((!this.state.Preenchido) && (!this.state.usuarioCadastrado) && (!this.state.SenhaInvalida))
-                {
+            if ((this.state.valueNome   == '') ||
+                (this.state.valueLogin  == '') ||
+                (this.state.valueSenha  == '') ||
+                (this.state.valueSenha2 == '')) 
+            {
+                this.setState({Preenchido: false})
+            } else {
+                this.setState({Preenchido: true})
+                Preenchido = true
+            }
+            if (!this.buscaDados()){
+            
+            try {         
+                this.setState({SenhaInvalida: this.state.valueSenha != this.state.valueSenha2})
+                
+                console.log('Preenchido '+Preenchido)
+                console.log('usuarioCadastrado '+this.state.usuarioCadastrado)
+                console.log('SenhaInvalida '+this.state.SenhaInvalida)
+
+                if ((Preenchido) && (!this.state.usuarioCadastrado) && (!this.state.SenhaInvalida)) {
                     this.EnviaDados()
                 }
             } catch (error) {
                 console.log(error)
             }
-        }     
+        }
+        }
     }
 
     render(){
@@ -188,8 +186,22 @@ export default class TelaLogin extends Component {
                                         onPress={changePwdType}
                                     /> 
                                 </View> 
+                                <View style={{paddingBottom: 20}}/>
+                                {this.props.route.params.NIVEL == 2? (
+                                    <View style={styles.entradas}>
+                                        <TextInput 
+                                            style={styles.login}
+                                            placeholder="Disciplina"
+                                            color='white'
+                                            onChangeText={text => this.setState({valueDisciplina: text})}
+                                            value={this.state.valueDisciplina}
+                                            placeholderTextColor='white'
+                                        />     
+                                    </View>     
+                                ) : null}
+                                
                                 <View>
-                                    {this.state.Preenchido ? (
+                                    {!this.state.Preenchido ? (
                                         <Text style={styles.senhaInvalida}>
                                             Campos não preenchidos
                                         </Text>    
@@ -211,6 +223,13 @@ export default class TelaLogin extends Component {
                                         onClick={() => this.ExecutarCadastro()}
                                     />    
                                 </View>   
+                                <View>
+                                    {this.state.Carregando ? (
+                                        <View style={[styles.container, styles.horizontal]}>
+                                            <ActivityIndicator  size="large" color="#0000ff" />
+                                        </View>   
+                                    ) : null}   
+                                </View>
                                 <View style={{paddingTop: 40}}>  
                                     <BotaoCentral 
                                         titulo='Voltar'

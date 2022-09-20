@@ -21,7 +21,8 @@ export default class TelaLogin extends Component {
             trecho1: '',
             trecho2: '',
             resposta: '',
-            dificuldade: '',
+            dificuldade: 1,
+            dificuldadeNome: 'Fácil',
         }
     }
 
@@ -52,6 +53,25 @@ export default class TelaLogin extends Component {
         this.buscaDados()   
     }
 
+    Dificuldade(){
+        if (this.state.dificuldade == 1) {
+            this.setState({
+                dificuldade: 2,
+                dificuldadeNome: 'Médio'
+            })
+        } else if (this.state.dificuldade == 2) {
+            this.setState({
+                dificuldade: 3,
+                dificuldadeNome: 'Difícil'
+            })
+        } else {
+            this.setState({
+                dificuldade: 1,
+                dificuldadeNome: 'Fácil'
+            })
+        }
+    }
+
     render(){
         return <>
             <ImageBackground
@@ -62,9 +82,9 @@ export default class TelaLogin extends Component {
                     <View style={styles.telaTotal}>
                         <View style={styles.informacoes}>
                             <Text>
-                                Título do Problema
+                                Título do Problema:
                             </Text>
-                            <View style={styles.codigo}>
+                            <View style={styles.caixa}>
                                 <TextInput
                                     multiline={true}
                                     onChangeText={text => this.setState({titulo: text})}
@@ -72,12 +92,12 @@ export default class TelaLogin extends Component {
                                 />    
                             </View> 
 
-                            <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                            <View style={{borderBottomWidth: 0, paddingTop: 10}} />
 
                             <Text>
-                                Descrição do Problema
+                                Descrição do Problema:
                             </Text>
-                            <View style={styles.codigo}>
+                            <View style={styles.caixa}>
                                 <TextInput
                                     multiline={true}
                                     onChangeText={text => this.setState({descricao: text})}
@@ -85,57 +105,69 @@ export default class TelaLogin extends Component {
                                 />    
                             </View> 
 
-                            <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                            <View style={{borderBottomWidth: 0, paddingTop: 10}} />
 
                             <Text>
-                                Pré-Código
+                                Resposta Esperada:
                             </Text>
-                            <View style={styles.codigo}>
-                                <TextInput
-                                    multiline={true}
-                                    onChangeText={text => this.setState({trecho1: text})}
-                                    value={this.state.trecho1}
-                                />    
-                            </View>     
-
-                            <View style={{borderBottomWidth: 0, paddingTop: 20}} />
-
-                            <Text>
-                                Pós-Código
-                            </Text>
-                            <View style={styles.codigo}>
-                                <TextInput
-                                    multiline={true}
-                                    onChangeText={text => this.setState({trecho2: text})}
-                                    value={this.state.trecho2}
-                                />    
-                            </View> 
-
-                            <View style={{borderBottomWidth: 0, paddingTop: 20}} />
-
-                            <Text>
-                                Resposta Esperada
-                            </Text>
-                            <View style={styles.codigo}>
+                            <View style={styles.caixa}>
                                 <TextInput
                                     multiline={true}
                                     onChangeText={text => this.setState({resposta: text})}
                                     value={this.state.resposta}
                                 />    
-                            </View> 
+                            </View>
 
-                            <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                            <View style={{borderBottomWidth: 0, paddingTop: 30}} />
+
+                            <View style={styles.texto}>
+                                <Text>
+                                    def main():
+                                </Text>
+                                <View style={styles.codigo}>
+                                    <TextInput
+                                        multiline={true}
+                                        onChangeText={text => this.setState({trecho1: text})}
+                                        value={this.state.trecho1}
+                                    />    
+                                </View>     
+
+                                <Text style={{fontWeight: 'bold'}}>
+                                    {"    {Código do Aluno}"}
+                                </Text>
+
+                                <View style={styles.codigo}>
+                                    <TextInput
+                                        multiline={true}
+                                        onChangeText={text => this.setState({trecho2: text})}
+                                        value={this.state.trecho2}
+                                    />    
+                                </View> 
+                                <Text>
+                                    {"    return(Resultado)"}
+                                </Text>
+                            </View>
+                            
+                            <Text>
+                                Obs: indentação igual a 4 espaços
+                            </Text>
+
+                            <View style={{borderBottomWidth: 0, paddingTop: 10}} />
 
                             <Text>
-                                Dificuldade
+                                Dificuldade:
                             </Text>
-                            <View style={styles.codigo}>
-                                <TextInput
-                                    multiline={true}
-                                    onChangeText={text => this.setState({dificuldade: text})}
-                                    value={this.state.dificuldade}
+                            <View style={styles.caixa}>
+                                <BotaoCentral 
+                                    style={{flex: 1}}
+                                    backgroundColor={'white'}
+                                    corFonte={constantes.corBloco}
+                                    titulo= {this.state.dificuldadeNome}
+                                    height= {45}
+                                    width= {'100%'}
+                                    onClick={() => this.Dificuldade()} 
                                 />    
-                            </View> 
+                            </View>  
                         </View>
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />

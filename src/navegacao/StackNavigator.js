@@ -8,6 +8,7 @@ import TelaEscolha from '../tela/TelaEscolha'
 import TelaCodigo from '../tela/TelaCodigo'
 import TelaCadCodigo from '../tela/TelaCadCodigo'
 import TelaCadastrar from '../tela/TelaCadastrar'
+import TelaRelatorio from '../tela/TelaRelatorio'
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="TelaCodigo" component={TelaCodigo} options={{headerShown:false}} />
       <Stack.Screen name="TelaCadCodigo" component={TelaCadCodigo} options={{headerShown:false}} />
       <Stack.Screen name="TelaCadastrar" component={TelaCadastrar} options={{headerShown:false}} />
+      <Stack.Screen name="TelaRelatorio" component={TelaRelatorio} options={{headerShown:false}} />
     </Stack.Navigator>
   );
 };

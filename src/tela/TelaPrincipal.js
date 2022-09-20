@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar'
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ImageBackground, ScrollView, Image } from 'react-native'
+import { View, Text, ImageBackground, ScrollView, Image } from 'react-native'
 
 import styles from './estilo/EstiloTelaPrincipal'
 import BotaoCentral from '../componente/BotaoCentral'
@@ -35,7 +34,6 @@ export default class TelaLogin extends Component {
     async buscaDados() {
         try {
             const response = await api.get("/concluido/"+constantes.id);
-            console.log(response.data)
             if (response.data) {         
                 this.setState({
                     total: response.data[0].CADTOTAL,
@@ -160,7 +158,7 @@ export default class TelaLogin extends Component {
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />
 
-                        {(constantes.tipo == 2 )? (
+                        {(constantes.nivel == 2 )? (
                             <View style={styles.informacoes}>
                                 <View style={{alignItems:'center', paddingBottom: 30}}>
                                     <Text style={styles.data}>
@@ -185,7 +183,7 @@ export default class TelaLogin extends Component {
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />
 
-                        {(constantes.tipo == 2 )? (
+                        {(constantes.nivel == 2 )? (
                             <View style={styles.informacoes}>
                                 <View style={{alignItems:'center', paddingBottom: 30}}>
                                     <Text style={styles.data}>
@@ -201,7 +199,7 @@ export default class TelaLogin extends Component {
                                         corFonte={constantes.corBloco}
                                         TamFonte={24}
                                         onClick={() => this.props.navigation.navigate("TelaCadastrar", {
-                                            TIPO: 2
+                                            NIVEL: 2
                                         })}
                                     />     
 

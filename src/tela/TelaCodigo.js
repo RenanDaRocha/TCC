@@ -32,12 +32,13 @@ export default class TelaLogin extends Component {
         try {
             const response = await api.post("/executar", {
                 CODIGO: this.trecho1+'\n'+this.state.resposta+'\n'+this.trecho2,
-                RESPOSTA: this.resposta
+                RESPOSTA: this.resposta,
+                ID_USUARIO: constantes.id,
             });
 
             console.log(response.data)
              
-            if (response.data == 'C') {
+            if (response.data == 'V') {
                 Alert.alert('Código Correto!')
                 await api.post("/enviarconcluido", {
                     ID_USUARIO: constantes.id,
@@ -88,6 +89,14 @@ export default class TelaLogin extends Component {
                             <Text>
                                 {this.trecho2}
                             </Text>     
+                        </View>
+                        
+                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                        <View style={styles.informacoes}>
+                            <Text style={styles.tab}>
+                                Obs: indentação igual a 4 espaços
+                            </Text>
                         </View>
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />

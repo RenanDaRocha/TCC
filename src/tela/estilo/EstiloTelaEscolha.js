@@ -27,5 +27,20 @@ export default StyleSheet.create({
     botao: {
         flexDirection: 'row',
         width: '50%',
-    }
+    },
+    relatorio: {
+        paddingBottom: 20,
+        borderRadius: 10,
+        width: '90%',
+        backgroundColor: 'white',
+    },
+    dados: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        paddingBottom: 3,
+    },
+    texto: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 })

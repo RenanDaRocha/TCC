@@ -18,7 +18,7 @@ export default StyleSheet.create({
         borderRadius: 10,
         width: '90%',
     },
-    codigo: {
+    caixa: {
         backgroundColor: 'white',
         borderColor: 'black',
         borderWidth: 1,
@@ -27,5 +27,19 @@ export default StyleSheet.create({
     botoes: {
         flexDirection: 'row',
         width: '90%',
+    },
+    tab: {
+        paddingTop: 10,
+        fontSize: 16,
+    },
+    texto: {
+        backgroundColor: '#EEE',
+        padding: 5,
+        borderWidth: 1,
+        borderStyle: 'dotted'
+    },
+    codigo: {
+        backgroundColor: 'white',
+        borderColor: 'black',
     }
 })

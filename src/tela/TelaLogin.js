@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Text, Image, TextInput, ImageBackground } from 'react-native'
+import { ScrollView, View, Text, TextInput, ImageBackground, ActivityIndicator } from 'react-native'
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import styles from './estilo/EstiloTelaLogin'
@@ -22,58 +22,44 @@ export default class TelaLogin extends Component {
             eyeIcon: "visibility",
             Esenha: true,
             SenhaInvalida: false,
+            Carregando: false,
         }
     }
 
-    componentDidMount(){
-        this.buscaDados();
-    }
-
     async buscaDados() {
+        
         try {
-            const response = await api.get("/login");
-            if (response.data.length) {         
-                this.setState({dados: response.data}) 
+            const response = await api.post("/login", {
+                LOGIN: this.state.valueLogin,
+                SENHA: this.state.valueSenha,
+            });
+            if (response.data.length) {    
+                this.setState({SenhaInvalida: false})
+                constantes.usuario = response.data[0].NOME
+                constantes.id = response.data[0].ID
+                constantes.nivel = response.data[0].NIVEL  
+                this.props.navigation.navigate("TelaPrincipal")
+            } else {
+                this.setState({SenhaInvalida: true})
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    ExecutarLogin = () => {
+    ExecutarLogin = () => {      
+        this.setState({Carregando: true}) 
         this.buscaDados()
-        
-        if (this.state.dados) {            
-            try {
-                let retorno = false
-                    for (let i = 0; i < this.state.dados.length; i++) {
-                        if (((this.state.valueLogin == this.state.dados[i].LOGIN) && 
-                             (this.state.valueSenha == this.state.dados[i].SENHA)))
-                        {
-                            retorno = true 
-                            constantes.usuario = this.state.dados[i].NOME
-                            constantes.id = this.state.dados[i].ID
-                            constantes.tipo = this.state.dados[i].TIPO
-                        }
-                    }
-                    this.setState({SenhaInvalida: !retorno})
-                    if (retorno) {
-                        this.props.navigation.navigate("TelaPrincipal")    
-                    }
-            } catch (error) {
-                console.log(error)
-            }
-        }    
-        this.setState({SenhaInvalida: true})  
+        this.setState({Carregando: false}) 
     }
 
     
     ExecutarCadastro = () => {
-        this.props.navigation.navigate("TelaCadastrar", {
-            TIPO: 1
-        })
-        
-        this.buscaDados();
+        if (!this.state.Carregando){
+            this.props.navigation.navigate("TelaCadastrar", {
+                NIVEL: 1
+            })
+        }
     }
 
     render(){
@@ -144,6 +130,13 @@ export default class TelaLogin extends Component {
                                         onClick={() => this.ExecutarLogin()}
                                     />    
                                 </View> 
+                                <View>
+                                    {this.state.Carregando ? (
+                                        <View style={[styles.container, styles.horizontal]}>
+                                            <ActivityIndicator  size="large" color="#0000ff" />
+                                        </View>   
+                                    ) : null}   
+                                </View>
                                 <View style={styles.cadastrar}>  
                                     <BotaoCentral 
                                         titulo='Cadastrar'
