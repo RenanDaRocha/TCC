@@ -27,7 +27,7 @@ export default class TelaLogin extends Component {
     async buscaDados() {
         this.setState({Carregando: true})
         try {
-            const response = await api.get("/concluidoaluno/"+this.props.route.params.id+"/"+constantes.id);
+            const response = await api.get("/concluidoaluno/"+this.props.route.params.id+"/"+constantes.Usuario.ID);
             
             if (response.data.length) {         
                 this.setState({dados: response.data}) 
@@ -108,7 +108,7 @@ export default class TelaLogin extends Component {
 
                         <View style={styles.botoes}>                         
                            <BotaoCentral
-                                titulo="Cancelar"
+                                titulo="Voltar"
                                 height= {50}   
                                 width= {'100%'}
                                 onClick={() => this.props.navigation.goBack()}                   

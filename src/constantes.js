@@ -1,7 +1,5 @@
 export default  constantes = {
-    usuario: '',
-    id: '',
-    nivel: '',
+    Usuario: [],
 
     corDeFundo: '',
     corCabecalho: '#6EC1E4',

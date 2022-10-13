@@ -81,7 +81,7 @@ const DataHoje = (modo, diasDif=0, data=null) => {
         currentDate = semana[week] + ', ' + day + ' de ' + mes[month-1]
         break;
     case 4:   // Ex: 31 de Dezembro
-        currentDate = day + ' de ' + mes[month]
+        currentDate = day + ' de ' + mes[month-1]
         break;
     case 5:   // Ex: Dezembro de 2020
         currentDate = mes[month-1] + ' de ' + year

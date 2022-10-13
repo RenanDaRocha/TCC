@@ -27,7 +27,7 @@ export default class TelaLogin extends Component {
     }
 
     async buscaDados() {
-        
+        this.setState({Carregando: true})
         try {
             const response = await api.post("/login", {
                 LOGIN: this.state.valueLogin,
@@ -35,9 +35,7 @@ export default class TelaLogin extends Component {
             });
             if (response.data.length) {    
                 this.setState({SenhaInvalida: false})
-                constantes.usuario = response.data[0].NOME
-                constantes.id = response.data[0].ID
-                constantes.nivel = response.data[0].NIVEL  
+                constantes.Usuario = response.data[0]
                 this.props.navigation.navigate("TelaPrincipal")
             } else {
                 this.setState({SenhaInvalida: true})
@@ -45,12 +43,13 @@ export default class TelaLogin extends Component {
         } catch (error) {
             console.log(error)
         }
+        this.setState({Carregando: false}) 
     }
 
-    ExecutarLogin = () => {      
-        this.setState({Carregando: true}) 
-        this.buscaDados()
-        this.setState({Carregando: false}) 
+    ExecutarLogin = () => {  
+        if (!this.state.Carregando || (this.state.valueLogin == '')){
+            this.buscaDados()    
+        }         
     }
 
     
@@ -130,13 +129,6 @@ export default class TelaLogin extends Component {
                                         onClick={() => this.ExecutarLogin()}
                                     />    
                                 </View> 
-                                <View>
-                                    {this.state.Carregando ? (
-                                        <View style={[styles.container, styles.horizontal]}>
-                                            <ActivityIndicator  size="large" color="#0000ff" />
-                                        </View>   
-                                    ) : null}   
-                                </View>
                                 <View style={styles.cadastrar}>  
                                     <BotaoCentral 
                                         titulo='Cadastrar'
@@ -147,7 +139,14 @@ export default class TelaLogin extends Component {
                                         height='auto'
                                         onClick={() => this.ExecutarCadastro()}
                                     />    
-                                </View>                                  
+                                </View>   
+                                <View>
+                                    {this.state.Carregando ? (
+                                        <View style={[styles.container, styles.horizontal]}>
+                                            <ActivityIndicator  size="large" color="#0000ff" />
+                                        </View>   
+                                    ) : null}   
+                                </View>                               
                             </View>    
                         </ScrollView>       
                     </View>            

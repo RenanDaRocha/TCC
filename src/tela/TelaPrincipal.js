@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, ScrollView, Image } from 'react-native'
+import { View, Text, ImageBackground, ScrollView, Image, ActivityIndicator } from 'react-native'
 
 import styles from './estilo/EstiloTelaPrincipal'
 import BotaoCentral from '../componente/BotaoCentral'
@@ -24,6 +24,7 @@ export default class TelaLogin extends Component {
             total3: '',
             total3Con: '',
             data: '',
+            carregando: false
         }
     }
     
@@ -33,7 +34,7 @@ export default class TelaLogin extends Component {
 
     async buscaDados() {
         try {
-            const response = await api.get("/concluido/"+constantes.id);
+            const response = await api.get("/concluido/"+constantes.Usuario.ID);
             if (response.data) {         
                 this.setState({
                     total: response.data[0].CADTOTAL,
@@ -45,6 +46,7 @@ export default class TelaLogin extends Component {
                     total3: response.data[0].CADTOTAL3,
                     total3Con: response.data[0].CADTOTAL3RESOL,
                     data: response.data[0].ULTIMO,
+                    carregando: true,
                 }) 
             }
         } catch (error) {
@@ -59,7 +61,8 @@ export default class TelaLogin extends Component {
                 style={{width: '100%', height: '100%'}}
             >
                 <ScrollView>
-                <View style={styles.telaTotal}>
+                {(this.state.carregando )? (
+                    <View style={styles.telaTotal}>
                         <View style={styles.informacoes}>
                             <Text style={styles.hoje}>
                                 {DataHoje(8)}
@@ -74,7 +77,7 @@ export default class TelaLogin extends Component {
                             </Text>
                             <View style={{borderBottomWidth: 0, paddingTop: 20}} />
                             <Text style={styles.data}>                    
-                                {constantes.usuario} 
+                                {constantes.Usuario.NOME} 
                             </Text>
                             
                             <Text style={styles.ultimoAcerto}>
@@ -158,7 +161,48 @@ export default class TelaLogin extends Component {
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />
 
-                        {(constantes.nivel == 2 )? (
+                        <View style={styles.informacoes}>
+                            <View style={{alignItems:'center', paddingBottom: 30}}>
+                                <Text style={styles.data}>
+                                    Alterar
+                                </Text>    
+                            </View> 
+
+                            <View style={{flexDirection: 'column', flex: 1, paddingLeft: '8%'}}>
+                                <BotaoCentral 
+                                    titulo="Informações"
+                                    backgroundColor='white'
+                                    height={60}
+                                    corFonte={constantes.corBloco}
+                                    TamFonte={24}
+                                    onClick={() => this.props.navigation.navigate("TelaCadastrar", {
+                                        NIVEL: 2,
+                                        edicao: true
+                                    })}
+                                />  
+                                {(constantes.Usuario.NIVEL >= 2 )? (
+                                    <View>
+                                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                                        <BotaoCentral 
+                                            titulo="Código"
+                                            backgroundColor='white'
+                                            height={60}
+                                            corFonte={constantes.corBloco}
+                                            TamFonte={24}
+                                            onClick={() => this.props.navigation.navigate("TelaEscolha", {
+                                                modo: 3
+                                            })}
+                                        />    
+                                    </View>
+                                ) : null}
+                                   
+                            </View>                               
+                        </View>
+
+                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                        {(constantes.Usuario.NIVEL >= 2 )? (
                             <View style={styles.informacoes}>
                                 <View style={{alignItems:'center', paddingBottom: 30}}>
                                     <Text style={styles.data}>
@@ -183,7 +227,7 @@ export default class TelaLogin extends Component {
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />
 
-                        {(constantes.nivel == 2 )? (
+                        {(constantes.Usuario.NIVEL >= 2 )? (
                             <View style={styles.informacoes}>
                                 <View style={{alignItems:'center', paddingBottom: 30}}>
                                     <Text style={styles.data}>
@@ -192,18 +236,23 @@ export default class TelaLogin extends Component {
                                 </View> 
 
                                 <View style={{flexDirection: 'column', flex: 1, paddingLeft: '8%'}}>
-                                    <BotaoCentral 
-                                        titulo="Supervisor"
-                                        backgroundColor='white'
-                                        height={60}
-                                        corFonte={constantes.corBloco}
-                                        TamFonte={24}
-                                        onClick={() => this.props.navigation.navigate("TelaCadastrar", {
-                                            NIVEL: 2
-                                        })}
-                                    />     
 
-                                    <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                                {(constantes.Usuario.NIVEL == 3 )? (
+                                    <View>
+                                        <BotaoCentral 
+                                            titulo="Professor"
+                                            backgroundColor='white'
+                                            height={60}
+                                            corFonte={constantes.corBloco}
+                                            TamFonte={24}
+                                            onClick={() => this.props.navigation.navigate("TelaCadastrar", {
+                                                NIVEL: 2
+                                            })}
+                                        />     
+
+                                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+                                    </View>
+                                    ) : null}
 
                                     <BotaoCentral 
                                         titulo="Código"
@@ -223,6 +272,12 @@ export default class TelaLogin extends Component {
 
                         <View style={{paddingTop: 30}}/> 
                     </View>
+                    ) : 
+                    <View style={[styles.container, styles.horizontal]}>
+                        <View style={{borderBottomWidth: 0, paddingTop: 40}} />
+                        <ActivityIndicator  size="large" color="#0000ff" />
+                    </View>
+                    }
                 </ScrollView>
             </ImageBackground>    
                 

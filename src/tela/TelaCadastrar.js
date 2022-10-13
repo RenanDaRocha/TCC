@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { ScrollView, View, Text, TextInput, ImageBackground, Alert, ActivityIndicator } from 'react-native'
+import React, { Component, useState, useEffect } from 'react'
+import { ScrollView, View, Text, TextInput, ImageBackground, Alert, ActivityIndicator, Keyboard } from 'react-native'
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import styles from './estilo/EstiloTelaLogin'
@@ -28,19 +28,25 @@ export default class TelaLogin extends Component {
             SenhaInvalida: false,
             Preenchido: true,
             Carregando: false,
+            EnterPressionado: 'N',
+            NomeBotao: 'Cadastrar'
+        }
+    }
+
+    componentDidMount(){
+        if (!!this.props.route.params.edicao) {
+            this.ModoEdicao()
         }
     }
 
     async buscaDados() {
         this.setState({Carregando: true})
-        let retorno = false
         try {
             const response = await api.post("/login", {
                 LOGIN: this.state.valueLogin,
             });            
             if (response.data.length) {         
                 this.setState({usuarioCadastrado: true})
-                retorno = true
             } else {
                 this.setState({usuarioCadastrado: false})
             }
@@ -48,10 +54,10 @@ export default class TelaLogin extends Component {
             console.log(error)
         }
         this.setState({Carregando: false})
-        return (retorno)
     }
 
     async EnviaDados() {
+        this.setState({Carregando: true})
         try {
             const response = await api.post("/enviarusuario", {
                 LOGIN: this.state.valueLogin,
@@ -61,50 +67,71 @@ export default class TelaLogin extends Component {
                 NIVEL: this.props.route.params.NIVEL
             });
             if (response.status == 200) {
-                Alert.alert('Cadastro Concluído')
+                if (!this.props.route.params.edicao) {
+                    Alert.alert('Cadastro Concluído')
+                } else {
+                    Alert.alert('Alteração Efetuada')
+                }
+                
                 this.props.navigation.goBack()
             }
 
         } catch (error) {
             console.log(error)
         }
+        this.setState({Carregando: false})
+    }
+
+    VerifiarCampos() {
+        if ((this.state.valueNome   == '') ||
+            (this.state.valueLogin  == '') ||
+            (this.state.valueSenha  == '') ||
+            (this.state.valueSenha2 == '')) 
+        {
+            this.setState({Preenchido: false})
+        } else {
+            this.setState({Preenchido: true})
+        } 
+    }
+
+    Verificacao() {
+        if (this.state.valueLogin != '') {
+            this.buscaDados()
+        }
+
+        this.VerifiarCampos()
+        this.setState({SenhaInvalida: this.state.valueSenha != this.state.valueSenha2})
     }
 
     ExecutarCadastro = () => {
-        let Preenchido = false
         if (!this.state.Carregando){
-
-            if ((this.state.valueNome   == '') ||
-                (this.state.valueLogin  == '') ||
-                (this.state.valueSenha  == '') ||
-                (this.state.valueSenha2 == '')) 
-            {
-                this.setState({Preenchido: false})
-            } else {
-                this.setState({Preenchido: true})
-                Preenchido = true
-            }
-            if (!this.buscaDados()){
-            
             try {         
-                this.setState({SenhaInvalida: this.state.valueSenha != this.state.valueSenha2})
-                
-                console.log('Preenchido '+Preenchido)
-                console.log('usuarioCadastrado '+this.state.usuarioCadastrado)
-                console.log('SenhaInvalida '+this.state.SenhaInvalida)
+                this.Verificacao()
 
-                if ((Preenchido) && (!this.state.usuarioCadastrado) && (!this.state.SenhaInvalida)) {
+                if ((this.state.Preenchido) && (!this.state.usuarioCadastrado) && (!this.state.SenhaInvalida)) {
                     this.EnviaDados()
                 }
             } catch (error) {
                 console.log(error)
             }
         }
+    }
+
+    ModoEdicao() {
+        this.setState({
+            valueNome: constantes.Usuario.NOME,
+            valueLogin: constantes.Usuario.LOGIN,
+            NomeBotao: 'Alterar'
+        })
+
+        if (this.props.route.params.NIVEL == 2) {
+            this.setState({
+                valueDisciplina: constantes.Usuario.DISCIPLINA,
+            })
         }
     }
 
     render(){
-
         const changePwdType = () => {
             this.setState({eyeIcon: this.state.eyeIcon === "visibility" ? "visibility-off": "visibility"}) 
             this.setState({Esenha: !this.state.Esenha}) 
@@ -128,6 +155,7 @@ export default class TelaLogin extends Component {
                                         onChangeText={text => this.setState({valueNome: text})}
                                         value={this.state.valueNome}
                                         placeholderTextColor='white'
+                                        onSubmitEditing={(i) => this.Verificacao()}
                                     />     
                                 </View>  
                                 <View style={{paddingBottom: 20}}/>
@@ -136,15 +164,20 @@ export default class TelaLogin extends Component {
                                         style={styles.login}
                                         placeholder="Login"
                                         color='white'
-                                        onChangeText={text => this.setState({valueLogin: text})}
+                                        onChangeText={text => 
+                                            {if (!this.props.route.params.edicao) {
+                                                this.setState({valueLogin: text })
+                                            }}
+                                        }
                                         value={this.state.valueLogin}
                                         placeholderTextColor='white'
+                                        onSubmitEditing={(i) => this.Verificacao()}
                                     />     
                                 </View> 
                                 <View>
                                     {this.state.usuarioCadastrado ? (
                                         <Text style={styles.senhaInvalida}>
-                                            Usuário Já cadastrado
+                                            Usuário Já Cadastrado
                                         </Text>    
                                     ) : null}   
                                 </View>
@@ -158,6 +191,7 @@ export default class TelaLogin extends Component {
                                         value={this.state.valueSenha}
                                         color='white'
                                         placeholderTextColor='white'
+                                        onSubmitEditing={(i) => this.Verificacao()}
                                     /> 
                                     <Icon
                                         style={styles.icon}
@@ -177,6 +211,7 @@ export default class TelaLogin extends Component {
                                         value={this.state.valueSenha2}
                                         color='white'
                                         placeholderTextColor='white'
+                                        onSubmitEditing={(i) => this.Verificacao()}
                                     /> 
                                     <Icon
                                         style={styles.icon}
@@ -196,6 +231,7 @@ export default class TelaLogin extends Component {
                                             onChangeText={text => this.setState({valueDisciplina: text})}
                                             value={this.state.valueDisciplina}
                                             placeholderTextColor='white'
+                                            onSubmitEditing={(i) => this.Verificacao()}
                                         />     
                                     </View>     
                                 ) : null}
@@ -216,7 +252,7 @@ export default class TelaLogin extends Component {
                                 </View>
                                 <View style={{paddingTop: 40}}>  
                                     <BotaoCentral 
-                                        titulo='Cadastrar'
+                                        titulo={this.state.NomeBotao}
                                         height={70}
                                         width='100%'
                                         borderWidth={1}
@@ -232,7 +268,7 @@ export default class TelaLogin extends Component {
                                 </View>
                                 <View style={{paddingTop: 40}}>  
                                     <BotaoCentral 
-                                        titulo='Voltar'
+                                        titulo='Cancelar'
                                         height={50}
                                         width='100%'
                                         borderWidth={1}

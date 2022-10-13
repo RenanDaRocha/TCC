@@ -30,7 +30,7 @@ export default class TelaLogin extends Component {
             if (this.props.route.params.modo == 1) {
                 response = await api.get("/codigos/"+this.props.route.params.dificuldade);
             } else {
-                response = await api.get("/codigosusuario/"+constantes.id);
+                response = await api.get("/codigosusuario/"+constantes.Usuario.ID);
             }
             
             if (response.data.length) {         
@@ -45,17 +45,18 @@ export default class TelaLogin extends Component {
     navegarPara = (dados) => {
         if (this.props.route.params.modo == 1) {
             this.props.navigation.navigate("TelaCodigo", {
-                id: dados.ID,
-                descricao: dados.DESCRICAO,
-                trecho1: dados.TRECHO,
-                trecho2: dados.TRECHO2,
-                resposta: dados.RESPOSTA
+                dados: dados,
             }) 
-        } else {
+        } else if (this.props.route.params.modo == 2) {
             this.props.navigation.navigate("TelaRelatorio", {
                 id: dados.ID,
             })  
-        }  
+        } else {
+            this.props.navigation.navigate("TelaCadCodigo", {
+                dados: dados,
+                edicao: true
+            })
+        } 
     }
 
     valores(dados, key){
@@ -116,7 +117,7 @@ export default class TelaLogin extends Component {
 
                         <View style={styles.botoes}>                         
                            <BotaoCentral
-                                titulo="Cancelar"
+                                titulo="Voltar"
                                 height= {50}   
                                 width= {'100%'}
                                 onClick={() => this.props.navigation.goBack()}                   

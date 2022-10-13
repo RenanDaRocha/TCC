@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, ScrollView, TextInput, Alert } from 'react-native'
+import { View, Text, ImageBackground, ScrollView, TextInput, Alert, ActivityIndicator } from 'react-native'
 
 import styles from './estilo/EstiloTelaCodigo'
 import BotaoCentral from '../componente/BotaoCentral'
@@ -13,27 +13,28 @@ export default class TelaLogin extends Component {
 
     constructor(props){
         super(props);
-        this.id = this.props.route.params.id
-        this.descricao = this.props.route.params.descricao
-        this.trecho1 = this.props.route.params.trecho1
-        this.trecho2 = this.props.route.params.trecho2
-        this.resposta = this.props.route.params.resposta
+        this.id = this.props.route.params.dados.ID
+        this.descricao = this.props.route.params.dados.DESCRICAO,
+        this.trecho1 = this.props.route.params.dados.TRECHO
+        this.trecho2 = this.props.route.params.dados.TRECHO2
+        this.resposta = this.props.route.params.dados.RESPOSTA
         this.retorno = ''
 
         this.state = {
             resposta: '',
+            Carregando: false,
         }
     }
 
     
 
     async buscaDados() {
-
+        this.setState({Carregando: true})
         try {
             const response = await api.post("/executar", {
                 CODIGO: this.trecho1+'\n'+this.state.resposta+'\n'+this.trecho2,
                 RESPOSTA: this.resposta,
-                ID_USUARIO: constantes.id,
+                ID_USUARIO: constantes.Usuario.ID,
             });
 
             console.log(response.data)
@@ -41,7 +42,7 @@ export default class TelaLogin extends Component {
             if (response.data == 'V') {
                 Alert.alert('Código Correto!')
                 await api.post("/enviarconcluido", {
-                    ID_USUARIO: constantes.id,
+                    ID_USUARIO: constantes.Usuario.ID,
                     ID_CODIGO: this.id,
                     DATA: DataHoje(2)
                 });
@@ -52,10 +53,12 @@ export default class TelaLogin extends Component {
         } catch (error) {
             console.log(error)
         }
+        this.setState({Carregando: false})
     }
-
     Enviar(){
-        this.buscaDados()   
+        if (!this.state.Carregando) {
+            this.buscaDados()       
+        }   
     }
 
     render(){
@@ -121,6 +124,14 @@ export default class TelaLogin extends Component {
                                 onClick={() => this.props.navigation.goBack()}                   
                             />                 
                         </View>
+
+                        <View>
+                            {this.state.Carregando ? (
+                                <View style={[styles.container, styles.horizontal]}>
+                                    <ActivityIndicator  size="large" color="#0000ff" />
+                                </View>   
+                            ) : null}   
+                        </View> 
                         
                         <View style={{paddingTop: 30}}/> 
                     </View>

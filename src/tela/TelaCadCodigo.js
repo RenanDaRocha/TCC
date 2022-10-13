@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, ScrollView, TextInput, Alert } from 'react-native'
+import { View, Text, ImageBackground, ScrollView, TextInput, Alert, ActivityIndicator } from 'react-native'
 
 import styles from './estilo/EstiloTelaCodigo'
 import BotaoCentral from '../componente/BotaoCentral'
@@ -15,7 +15,6 @@ export default class TelaLogin extends Component {
         super(props);
 
         this.state = {
-            resposta: '',
             titulo: '',
             descricao: '',
             trecho1: '',
@@ -23,13 +22,32 @@ export default class TelaLogin extends Component {
             resposta: '',
             dificuldade: 1,
             dificuldadeNome: 'Fácil',
+            NomeBotao: 'Cadastrar',
+            Carregando: false,
         }
     }
 
-    
+    componentDidMount(){
+        if (!!this.props.route.params.edicao) {
+            this.ModoEdicao()
+        }
+    }
+
+    ModoEdicao() {
+        console.log(this.props.route.params.dados)
+        this.setState({
+            titulo: this.props.route.params.dados.TITULO,
+            descricao: this.props.route.params.dados.DESCRICAO,
+            trecho1: this.props.route.params.dados.TRECHO,
+            trecho2: this.props.route.params.dados.TRECHO2,
+            resposta: this.props.route.params.dados.RESPOSTA,
+            dificuldade: this.props.route.params.dados.DIFICULDADE,
+            NomeBotao: 'Alterar'
+        })
+    }
 
     async buscaDados() {
-
+        this.setState({Carregando: true})
         try {
             const response = await api.post("/enviarcodigos", {
                 TITULO: this.state.titulo,
@@ -38,7 +56,7 @@ export default class TelaLogin extends Component {
                 DIFICULDADE: this.state.dificuldade,
                 TRECHO1: this.state.trecho1,
                 TRECHO2: this.state.trecho2,
-                USUARIO: constantes.id
+                USUARIO: constantes.Usuario.ID
             });
             if (response.status == 200) {
                 Alert.alert('Cadastro Concluído')
@@ -47,10 +65,13 @@ export default class TelaLogin extends Component {
         } catch (error) {
             console.log(error)
         }
+        this.setState({Carregando: false})
     }
 
     Enviar(){
-        this.buscaDados()   
+        if (!this.state.Carregando){
+            this.buscaDados()   
+        }
     }
 
     Dificuldade(){
@@ -87,7 +108,11 @@ export default class TelaLogin extends Component {
                             <View style={styles.caixa}>
                                 <TextInput
                                     multiline={true}
-                                    onChangeText={text => this.setState({titulo: text})}
+                                    onChangeText={text => 
+                                        {if (!this.props.route.params.edicao) {
+                                            this.setState({titulo: text})
+                                        }}
+                                    }
                                     value={this.state.titulo}
                                 />    
                             </View> 
@@ -175,7 +200,7 @@ export default class TelaLogin extends Component {
                         <View style={styles.botoes}>
                             <BotaoCentral 
                                 style={{flex: 1}}
-                                titulo="Enviar"
+                                titulo={this.state.NomeBotao}
                                 height= {50}
                                 width= {'47%'}
                                 onClick={() => this.Enviar()} 
@@ -192,6 +217,14 @@ export default class TelaLogin extends Component {
                                 onClick={() => this.props.navigation.goBack()}                   
                             />                 
                         </View>
+
+                        <View>
+                                    {this.state.Carregando ? (
+                                        <View style={[styles.container, styles.horizontal]}>
+                                            <ActivityIndicator  size="large" color="#0000ff" />
+                                        </View>   
+                                    ) : null}   
+                                </View>
                         
                         <View style={{paddingTop: 30}}/> 
                     </View>

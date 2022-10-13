@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "TCC",
-    "slug": "TCC",
-    "version": "1.0.0",
+    "name": "iPyDojo",
+    "slug": "iPyDojo",
+    "version": "1.10.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,16 +18,25 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/icon.png",
+      "bundleIdentifier": "yes"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.renan_rocha.TCC"
     },
     "web": {
+      "icon": "./assets/icon.png",
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9b32eb9c-a312-4129-b805-35a4a89dd76f"
+      }
     }
   }
 }
