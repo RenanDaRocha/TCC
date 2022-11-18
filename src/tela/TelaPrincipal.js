@@ -164,6 +164,44 @@ export default class TelaLogin extends Component {
                         <View style={styles.informacoes}>
                             <View style={{alignItems:'center', paddingBottom: 30}}>
                                 <Text style={styles.data}>
+                                    Ranking
+                                </Text>    
+                            </View> 
+
+                            <View style={{flexDirection: 'column', flex: 1, paddingLeft: '8%'}}>
+                                <BotaoCentral 
+                                    titulo="Questões"
+                                    backgroundColor='white'
+                                    height={60}
+                                    corFonte={constantes.corBloco}
+                                    TamFonte={24}
+                                    onClick={() => this.props.navigation.navigate("TelaEscolhaRanking", {
+                                        Tela: 1
+                                    })}
+                                />  
+                            </View>    
+
+                            <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                            <View style={{flexDirection: 'column', flex: 1, paddingLeft: '8%'}}>
+                                <BotaoCentral 
+                                    titulo="Pontos"
+                                    backgroundColor='white'
+                                    height={60}
+                                    corFonte={constantes.corBloco}
+                                    TamFonte={24}
+                                    onClick={() => this.props.navigation.navigate("TelaEscolhaRanking", {
+                                        Tela: 2
+                                    })}
+                                />  
+                            </View>                              
+                        </View>
+
+                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                        <View style={styles.informacoes}>
+                            <View style={{alignItems:'center', paddingBottom: 30}}>
+                                <Text style={styles.data}>
                                     Alterar
                                 </Text>    
                             </View> 
@@ -260,7 +298,9 @@ export default class TelaLogin extends Component {
                                         height={60}
                                         corFonte={constantes.corBloco}
                                         TamFonte={24}
-                                        onClick={() => this.props.navigation.navigate("TelaCadCodigo")}
+                                        onClick={() => this.props.navigation.navigate("TelaCadCodigo", {                                            
+                                            edicao: false
+                                        })}
                                     />     
                                 </View>                               
                             </View>

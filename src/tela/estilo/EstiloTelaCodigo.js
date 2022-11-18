@@ -22,7 +22,8 @@ export default StyleSheet.create({
         backgroundColor: 'white',
         borderColor: 'black',
         borderWidth: 1,
-        borderStyle: 'dotted'
+        borderStyle: 'dotted',
+        flex: 1,
     },
     botoes: {
         flexDirection: 'row',

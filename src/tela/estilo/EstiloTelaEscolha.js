@@ -43,4 +43,16 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    informacoes: {
+        padding: 10,
+        paddingBottom: 20,
+        backgroundColor: Constantes.corBloco,
+        borderRadius: 10,
+        width: '90%',
+    },
+    data: {
+        paddingLeft: 10,
+        fontSize: 24,
+        color: Constantes.corDaFonte,
+    },
 })

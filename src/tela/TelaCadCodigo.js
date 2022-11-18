@@ -24,6 +24,9 @@ export default class TelaLogin extends Component {
             dificuldadeNome: 'Fácil',
             NomeBotao: 'Cadastrar',
             Carregando: false,
+            tempo1: '0',
+            tempo2: '0',
+            tempo3: '0',
         }
     }
 
@@ -34,14 +37,16 @@ export default class TelaLogin extends Component {
     }
 
     ModoEdicao() {
-        console.log(this.props.route.params.dados)
         this.setState({
             titulo: this.props.route.params.dados.TITULO,
             descricao: this.props.route.params.dados.DESCRICAO,
-            trecho1: this.props.route.params.dados.TRECHO,
-            trecho2: this.props.route.params.dados.TRECHO2,
+            trecho1: this.props.route.params.dados.TRECHO.replace('def main():',''),
+            trecho2: this.props.route.params.dados.TRECHO2.replace('    return(Resultado)',''),
             resposta: this.props.route.params.dados.RESPOSTA,
             dificuldade: this.props.route.params.dados.DIFICULDADE,
+            tempo1: String(this.props.route.params.dados.TEMPO1),
+            tempo2: String(this.props.route.params.dados.TEMPO2),
+            tempo3: String(this.props.route.params.dados.TEMPO3),
             NomeBotao: 'Alterar'
         })
     }
@@ -56,7 +61,10 @@ export default class TelaLogin extends Component {
                 DIFICULDADE: this.state.dificuldade,
                 TRECHO1: this.state.trecho1,
                 TRECHO2: this.state.trecho2,
-                USUARIO: constantes.Usuario.ID
+                USUARIO: constantes.Usuario.ID,
+                TEMPO1: parseInt(this.state.tempo1),
+                TEMPO2: parseInt(this.state.tempo2),
+                TEMPO3: parseInt(this.state.tempo3),
             });
             if (response.status == 200) {
                 Alert.alert('Cadastro Concluído')
@@ -193,6 +201,54 @@ export default class TelaLogin extends Component {
                                     onClick={() => this.Dificuldade()} 
                                 />    
                             </View>  
+
+                            <View style={{borderBottomWidth: 0, paddingTop: 10}} />
+
+                            <Text>
+                                Pontuação:
+                            </Text>
+                            <View style={{flexDirection: 'row'}}>
+                                <View style={styles.caixa}>
+                                    <View style={{alignItems:'center'}}>
+                                        <Text>
+                                            3 Pontos
+                                        </Text>
+                                        <TextInput
+                                            onChangeText={text => this.setState({tempo1: text})}
+                                            value={this.state.tempo1}
+                                        />       
+                                    </View>                                
+                                </View>  
+
+                                <View style={styles.caixa}>
+                                    <View style={{alignItems:'center'}}>
+                                        <Text>
+                                            2 Pontos
+                                        </Text>
+                                        <TextInput
+                                            onChangeText={text => this.setState({tempo2: text})}
+                                            value={this.state.tempo2}
+                                        />       
+                                    </View>                                
+                                </View>
+
+                                <View style={styles.caixa}>
+                                    <View style={{alignItems:'center'}}>
+                                        <Text>
+                                            1 Pontos
+                                        </Text>
+                                        <TextInput
+                                            onChangeText={text => this.setState({tempo3: text})}
+                                            value={this.state.tempo3}
+                                        />       
+                                    </View>                                
+                                </View>      
+                            </View>
+                            
+                            <Text>
+                                Obs: informe os segundos maximos para receber esta pontuação
+                            </Text>
+                              
                         </View>
 
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />

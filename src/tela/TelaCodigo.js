@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, ImageBackground, ScrollView, TextInput, Alert, ActivityIndicator } from 'react-native'
+import Icon from "react-native-vector-icons/MaterialIcons"
 
 import styles from './estilo/EstiloTelaCodigo'
 import BotaoCentral from '../componente/BotaoCentral'
@@ -18,15 +19,18 @@ export default class TelaLogin extends Component {
         this.trecho1 = this.props.route.params.dados.TRECHO
         this.trecho2 = this.props.route.params.dados.TRECHO2
         this.resposta = this.props.route.params.dados.RESPOSTA
+        this.tempo1 = this.props.route.params.dados.TEMPO1
+        this.tempo2 = this.props.route.params.dados.TEMPO2
+        this.tempo3 = this.props.route.params.dados.TEMPO3
         this.retorno = ''
+        this.ponto = 0
 
         this.state = {
             resposta: '',
             Carregando: false,
+            segundo: 0,
         }
     }
-
-    
 
     async buscaDados() {
         this.setState({Carregando: true})
@@ -36,29 +40,64 @@ export default class TelaLogin extends Component {
                 RESPOSTA: this.resposta,
                 ID_USUARIO: constantes.Usuario.ID,
             });
-
-            console.log(response.data)
              
             if (response.data == 'V') {
-                Alert.alert('Código Correto!')
+                this.AlertaSucesso(true);
+                console.log('foi')
                 await api.post("/enviarconcluido", {
                     ID_USUARIO: constantes.Usuario.ID,
                     ID_CODIGO: this.id,
-                    DATA: DataHoje(2)
+                    DATA: DataHoje(2),
+                    PONTO: this.ponto
                 });
                 this.props.navigation.navigate("TelaPrincipal")
             } else {
-                Alert.alert('Código Incorreto!')
+                this.AlertaSucesso(false);
             }
         } catch (error) {
             console.log(error)
         }
         this.setState({Carregando: false})
     }
+
+    AlertaSucesso(sucesso) {
+        if (sucesso) {
+            if (this.state.segundo <= this.tempo1) {
+                this.ponto = 3
+                Alert.alert('Código Correto!', 'Você respondeu em até '+this.Tempo(this.tempo1)+ ' e ganhou '+ 3 +' pontos!')
+            } else if (this.state.segundo <= this.tempo2) {
+                this.ponto = 2
+                Alert.alert('Código Correto!', 'Você respondeu em até '+this.Tempo(this.tempo2)+ ' e ganhou '+ 2 +' pontos!')
+            } else if (this.state.segundo <= this.tempo3) {
+                this.ponto = 1
+                Alert.alert('Código Correto!', 'Você respondeu em até '+this.Tempo(this.tempo3)+ ' e ganhou '+ 1 +' pontos!')
+            } else {
+                Alert.alert('Código Correto!', 'Você respondeu em mais de '+this.Tempo(this.tempo3)+ ' e não ganhou pontos!')
+            }
+
+        } else {
+            Alert.alert('Código Incorreto!', 'O código não retorna o resultado esperado!')
+        }           
+    }
+
     Enviar(){
         if (!this.state.Carregando) {
             this.buscaDados()       
         }   
+    }
+    
+    componentDidMount(){
+        this.Iniciar();
+    }
+
+    Iniciar = () => {
+        const intervalo = setInterval(() => this.setState({ segundo: this.state.segundo+1}), 1000)
+    };
+
+    Tempo(tempo){
+        const minuto = Math.floor(tempo/60)
+        const segundo = tempo % 60
+        return ((minuto < 10 ? '0'+minuto: minuto)+':'+(segundo < 10 ? '0'+segundo: segundo))
     }
 
     render(){
@@ -92,6 +131,15 @@ export default class TelaLogin extends Component {
                             <Text>
                                 {this.trecho2}
                             </Text>     
+                        </View>
+                        
+                        <View style={{borderBottomWidth: 0, paddingTop: 20}} />
+
+                        <View style={styles.informacoes}>
+                            <Text style={styles.tab}>
+                                {'Tempo: '+this.Tempo(this.state.segundo)}
+                                {/*this.state.minuto < 10 ? '0'+this.state.minuto : this.state.minuto*/}
+                            </Text>
                         </View>
                         
                         <View style={{borderBottomWidth: 0, paddingTop: 20}} />
