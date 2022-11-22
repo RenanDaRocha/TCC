@@ -43,7 +43,6 @@ export default class TelaLogin extends Component {
              
             if (response.data == 'V') {
                 this.AlertaSucesso(true);
-                console.log('foi')
                 await api.post("/enviarconcluido", {
                     ID_USUARIO: constantes.Usuario.ID,
                     ID_CODIGO: this.id,

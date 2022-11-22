@@ -118,7 +118,7 @@ export default class TelaLogin extends Component {
                                 </View>
                                 <View style={{flex: 1, paddingRight: 15, alignItems: 'flex-end'}}>
                                     <Text style={styles.texto}>
-                                        Quantidade
+                                        {this.Tela == 1  ? 'Quantidade' : 'Pontos'}
                                     </Text>    
                                 </View>
                             </View> 
