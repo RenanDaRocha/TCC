@@ -16,8 +16,8 @@ export default class TelaLogin extends Component {
         super(props);
         this.id = this.props.route.params.dados.ID
         this.descricao = this.props.route.params.dados.DESCRICAO,
-        this.trecho1 = this.props.route.params.dados.TRECHO
-        this.trecho2 = this.props.route.params.dados.TRECHO2
+        this.trecho1 = 'def main():\n'+this.props.route.params.dados.TRECHO
+        this.trecho2 = this.props.route.params.dados.TRECHO2+'\n    return(Resultado)'
         this.resposta = this.props.route.params.dados.RESPOSTA
         this.tempo1 = this.props.route.params.dados.TEMPO1
         this.tempo2 = this.props.route.params.dados.TEMPO2

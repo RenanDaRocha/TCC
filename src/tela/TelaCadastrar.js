@@ -49,6 +49,7 @@ export default class TelaLogin extends Component {
                 this.setState({usuarioCadastrado: true})
             } else {
                 this.setState({usuarioCadastrado: false})
+                this.EnviaDados()
             }
         } catch (error) {
             console.log(error)
@@ -57,7 +58,6 @@ export default class TelaLogin extends Component {
     }
 
     async EnviaDados() {
-        this.setState({Carregando: true})
         try {
             const response = await api.post("/enviarusuario", {
                 LOGIN: this.state.valueLogin,
@@ -79,38 +79,26 @@ export default class TelaLogin extends Component {
         } catch (error) {
             console.log(error)
         }
-        this.setState({Carregando: false})
-    }
-
-    VerifiarCampos() {
-        if ((this.state.valueNome   == '') ||
-            (this.state.valueLogin  == '') ||
-            (this.state.valueSenha  == '') ||
-            (this.state.valueSenha2 == '')) 
-        {
-            this.setState({Preenchido: false})
-        } else {
-            this.setState({Preenchido: true})
-        } 
-    }
-
-    Verificacao() {
-        if (this.state.valueLogin != '') {
-            this.buscaDados()
-        }
-
-        this.VerifiarCampos()
-        this.setState({SenhaInvalida: this.state.valueSenha != this.state.valueSenha2})
     }
 
     ExecutarCadastro = () => {
-        if (!this.state.Carregando){
+        if (!this.state.Carregando && this.state.valueLogin != ''){
             try {         
-                this.Verificacao()
+                
+                this.setState({SenhaInvalida: this.state.valueSenha != this.state.valueSenha2})
 
-                if ((this.state.Preenchido) && (!this.state.usuarioCadastrado) && (!this.state.SenhaInvalida)) {
-                    this.EnviaDados()
-                }
+                if ((this.state.valueNome   == '') ||
+                    (this.state.valueLogin  == '') ||
+                    (this.state.valueSenha  == '') ||
+                    (this.state.valueSenha2 == '')) 
+                {
+                    this.setState({Preenchido: false})
+                } else {
+                    this.setState({Preenchido: true})
+                    if ((this.state.Preenchido) && (!this.state.SenhaInvalida)) {
+                        this.buscaDados()
+                    }
+                }               
             } catch (error) {
                 console.log(error)
             }

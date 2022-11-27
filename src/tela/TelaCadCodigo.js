@@ -40,8 +40,8 @@ export default class TelaLogin extends Component {
         this.setState({
             titulo: this.props.route.params.dados.TITULO,
             descricao: this.props.route.params.dados.DESCRICAO,
-            trecho1: this.props.route.params.dados.TRECHO.replace('def main():',''),
-            trecho2: this.props.route.params.dados.TRECHO2.replace('    return(Resultado)',''),
+            trecho1: this.props.route.params.dados.TRECHO,
+            trecho2: this.props.route.params.dados.TRECHO2,
             resposta: this.props.route.params.dados.RESPOSTA,
             dificuldade: this.props.route.params.dados.DIFICULDADE,
             tempo1: String(this.props.route.params.dados.TEMPO1),
@@ -67,7 +67,12 @@ export default class TelaLogin extends Component {
                 TEMPO3: parseInt(this.state.tempo3),
             });
             if (response.status == 200) {
-                Alert.alert('Cadastro Concluído')
+                if (!!this.props.route.params.edicao) {
+                    Alert.alert('Alterção Concluída')
+                } else {
+                    Alert.alert('Cadastro Concluído')    
+                };
+                
                 this.props.navigation.goBack()
             }
         } catch (error) {
