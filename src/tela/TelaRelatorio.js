@@ -49,7 +49,7 @@ export default class TelaLogin extends Component {
                     </View>
                     <View style={{flex: 1, paddingRight: 15, alignItems: 'flex-end'}}>
                         <Text>
-                            {DataHoje(1,0,dados.DATA)}
+                            {DataHoje(1,1,dados.DATA)}
                         </Text>    
                     </View>
                 </View>   
